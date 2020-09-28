@@ -212,23 +212,23 @@ def MainTokenRegExp(main_token, constraints):
 
 #     Dumppickle(os.path.join(DICpkdir, 'mtRegExpList.pk'), mtRegExpList)
 
-print(main_token)
-print(constraints)
-regex, causefirst = MainTokenRegExp(main_token, constraints)
-print(regex)
-print('causefirst = ', causefirst)
-txt = 'ssdf . emily woke up late , and for this reason , she was late to class . sdj'
-matches = regex.findall(txt)
-print(matches)
+# print(main_token)
+# print(constraints)
+# regex, causefirst = MainTokenRegExp(main_token, constraints)
+# print(regex)
+# print('causefirst = ', causefirst)
+# txt = 'ssdf . emily woke up late , and for this reason , she was late to class . sdj'
+# matches = regex.findall(txt)
+# print(matches)
 # [.|;|!] (.*) (?:,|;|\.|--) (?:and|but|so|also) (as a [^\s]+ result) (?:,) (.*) [.|;|!]
 
 
 #(?:,|;|.|--)
-r = '[.|;|!](.*)(?:,|;|.|--)(?:and|but|so|also) (therefore) (.*)[.|;|!]'
-regex = re.compile(r)
-txt = 'aaskdjfkajsdfk. emily woke up late, and therefore she woke up late. skdjhfaksdjf'
-matches = regex.findall(txt)
-print(matches)
+# r = '[.|;|!](.*)(?:,|;|.|--)(?:and|but|so|also) (therefore) (.*)[.|;|!]'
+# regex = re.compile(r)
+# txt = 'aaskdjfkajsdfk. emily woke up late, and therefore she woke up late. skdjhfaksdjf'
+# matches = regex.findall(txt)
+# print(matches)
 
 
 
