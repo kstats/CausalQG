@@ -248,7 +248,7 @@ def MainTokenRegExp(main_token, constraints):
                     elif cp[1:-1] == '&MODNUM':
                         curRegExp += optional_regex_from_list(MODNUM) 
                     else:
-                        curRegExp += '[^\s]+'
+                        curRegExp += '[^\S]*'
                 else:
                     curRegExp += optional_regex_from_list(cp[1:-1])
         ### ---- add current main_token pieces into current Regular Expression -- curRegExp ----
