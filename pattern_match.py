@@ -194,3 +194,12 @@ def MainTokenRegExp(main_token, constraints):
                     curRegExp = curRegExp + r')'
 
     return curRegExp, causefirst
+
+patterns = TXT2Patterns()
+
+def find_match(text):
+    out = []
+    for p in patterns:
+        ptr = re.compile(p[0])
+        out.extend(ptr.findall(text))
+    return out
