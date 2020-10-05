@@ -1,44 +1,9 @@
-ClauseHead = ['that', 'whether', 'if', 'what', 'whatever', 'who', 'whoever', 'whom', 'whose', 'which', 'when', 'where', 'how', 'why']
-THIS = ['this', 'that', 'these', 'those', 'it', 'which']
-this = ['this', 'that', 'these', 'those']
-AND = ['and', 'but', 'so', 'also']
-BE = ['be', 'being', 'been', 'have been', 'is', 'am', 'are', 'was', 'were']
-CAN = ['can', 'could', 'may', 'might', 'will', 'would', 'must', 'should', 'ought to']
-ADJ = ['direct', 'same', 'main', 'seperate', 'final', 'alone', 'important', 'major', 'key', 'biggest', 'possible', 'only', 'primary']
-ADV = ['just', 'also', 'only', 'merely', 'all', 'alone', 'often', 'simply']
-ONE = ['the', 'a', 'an', 'one', 'another']
-
-def TXT2Patterns():
-	causaltxt = open('causal_links.txt', "r").read()
-    causal_txt_lines = causaltxt.splitlines()
-    Patterns = []
-    ptid = 0
-    for txt in causal_txt_lines:
-        ### ---- if a line is a empty string, skip it ----
-        if len(txt) == 0 or re.match(r"[\s]+$", txt):
-            continue
-        ### ---- if a line started with '#', it is a comment line, skip it ----
-        if re.match(r"#", txt):
-            continue
-        ### ---- get the 3-level type for each pattern ----
-        ptidx = [int(i) for i in list((re.match(r'(\d+) (\d+) (\d+) (\d+) (\d+)', txt)).groups())]
-        ### ---- get pattern text for each pattern ----
-        ptxt = re.search(r'(?<={)(.+)(?=})', txt).group(0)
-        ### ---- get example text list for each pattern ---- 
-        etxt = re.findall(r'(?<=\[)([^\]]+)(?=\])', txt)
-        ### ---- create a 'pattern' type object and append it into "Patterns" list ----
-#         Patterns.append(pattern(ptidx[0], ptidx[1], ptidx[2:], ptxt, etxt, ptid))
-        main_token, constraints = ProcessPattern(ptxt)
-        regex, causefirst = MainTokenRegExp(main_token, constraints) #return regex not regex compiled
-        Patterns.append((regex, causefirst))
-        ptid += 1
-    return Patterns
-
 import os
+import nltk
 import re
 import operator
-TXT2Patterns()
 
+def DelEmptyString(strlist):
     i = 0
     while i < len(strlist):
         if strlist[i] == None or len(strlist[i]) == 0:
@@ -46,6 +11,7 @@ TXT2Patterns()
         else:
             i += 1
     return strlist
+
 
 def ProcessPattern(ptxt):
     main_token = []
@@ -100,13 +66,34 @@ def ProcessPattern(ptxt):
 
     return main_token, constraints
 
-main_token, constraints = ProcessPattern('&C (,/;/./--) (&AND) for (&this) reason/reasons (,/that) &R')
-#emily woke up late, and for this reason, she was late to class
 
-import os
-import nltk
-import re
-import operator
+def TXT2Patterns():
+    causaltxt = open('causal_links.txt', "r").read()
+    causal_txt_lines = causaltxt.splitlines()
+    Patterns = []
+    ptid = 0
+    for txt in causal_txt_lines:
+        ### ---- if a line is a empty string, skip it ----
+        if len(txt) == 0 or re.match(r"[\s]+$", txt):
+            continue
+        ### ---- if a line started with '#', it is a comment line, skip it ----
+        if re.match(r"#", txt):
+            continue
+        ### ---- get the 3-level type for each pattern ----
+        ptidx = [int(i) for i in list((re.match(r'(\d+) (\d+) (\d+) (\d+) (\d+)', txt)).groups())]
+        ### ---- get pattern text for each pattern ----
+        ptxt = re.search(r'(?<={)(.+)(?=})', txt).group(0)
+        ### ---- get example text list for each pattern ---- 
+        etxt = re.findall(r'(?<=\[)([^\]]+)(?=\])', txt)
+        ### ---- create a 'pattern' type object and append it into "Patterns" list ----
+        # Patterns.append(pattern(ptidx[0], ptidx[1], ptidx[2:], ptxt, etxt, ptid))
+        main_token, constraints = ProcessPattern(ptxt)
+        regex, causefirst = MainTokenRegExp(main_token, constraints) #return regex not regex compiled
+        Patterns.append((regex, causefirst))
+        ptid += 1
+    return Patterns
+
+
 ### 'MainTokenRegExp' intend to: create regular expression list for all patterns
 ### ---- in order to check whether the sentence contains a pattern's main_token ---
 ### ---- notice that the capture group (.*) is in accordance with Patterns constraints ----
@@ -118,7 +105,6 @@ BE = r'be|is|are|was|were|being|been|have been'
 MODNUM = r'at least|at most'
 punc = [',',';','.','--']
 
-# this = [this, that, these, those]
 def MainTokenRegExp(main_token, constraints):
     ### current Regular Expression for current patterns\
     ### if current pattern only have one main_token, find the first appearance of this main_token ----
@@ -207,28 +193,4 @@ def MainTokenRegExp(main_token, constraints):
                         curRegExp = curRegExp + tokens[tempt]#.encode('utf-8')
                     curRegExp = curRegExp + r')'
 
-    #return re.compile(curRegExp, re.I), causefirst  ###re.I means ignore upper or lower cases
     return curRegExp, causefirst
-
-#     Dumppickle(os.path.join(DICpkdir, 'mtRegExpList.pk'), mtRegExpList)
-
-# print(main_token)
-# print(constraints)
-# regex, causefirst = MainTokenRegExp(main_token, constraints)
-# print(regex)
-# print('causefirst = ', causefirst)
-# txt = 'ssdf . emily woke up late , and for this reason , she was late to class . sdj'
-# matches = regex.findall(txt)
-# print(matches)
-# [.|;|!] (.*) (?:,|;|\.|--) (?:and|but|so|also) (as a [^\s]+ result) (?:,) (.*) [.|;|!]
-
-
-#(?:,|;|.|--)
-# r = '[.|;|!](.*)(?:,|;|.|--)(?:and|but|so|also) (therefore) (.*)[.|;|!]'
-# regex = re.compile(r)
-# txt = 'aaskdjfkajsdfk. emily woke up late, and therefore she woke up late. skdjhfaksdjf'
-# matches = regex.findall(txt)
-# print(matches)
-
-
-
