@@ -2,6 +2,8 @@ import re
 
 from unittest import TestCase
 
+from pattern_match import find_match
+
 class TestPatterns(TestCase):
     pass
 
@@ -19,7 +21,8 @@ for txt in lines:
         continue
     etxt = etxt[0]
     def ex(self):
-        actual = "hi"
-        assert actual == etxt, f"Expected {etxt}. Got {actual}"
+        match = find_match(etxt)
+        print(match)
+        assert match, f"Couldn't find match for {etxt}"
     setattr(TestPatterns, f"test_{i}", ex)
     i += 1
