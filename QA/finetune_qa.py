@@ -4,6 +4,7 @@ import os
 
 import pandas as pd
 import torch
+from sklearn.model_selection import train_test_split
 from transformers import (
     AutoTokenizer,
     AutoModelForQuestionAnswering,
@@ -73,7 +74,19 @@ def finetune(args):
         "deepset/bert-large-uncased-whole-word-masking-squad2"
     )
     train_contexts, train_questions, train_answers = parse_data(args.train_data)
-    val_contexts, val_questions, val_answers = parse_data(args.valid_data)
+    if args.valid_data:
+        val_contexts, val_questions, val_answers = parse_data(args.valid_data)
+    else:
+        (
+            train_contexts,
+            val_contexts,
+            train_questions,
+            val_questions,
+            train_answers,
+            val_answers,
+        ) = train_test_split(
+            train_contexts, train_questions, train_answers, test_size=0.2
+        )
     train_encodings = tokenizer(
         train_contexts, train_questions, truncation=True, max_length=512, padding=True
     )
