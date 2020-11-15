@@ -85,7 +85,7 @@ def finetune(args):
             train_answers,
             val_answers,
         ) = train_test_split(
-            train_contexts, train_questions, train_answers, test_size=0.2
+            train_contexts, train_questions, train_answers, test_size=0.2, random_state=42
         )
     train_encodings = tokenizer(
         train_contexts, train_questions, truncation=True, max_length=512, padding=True
