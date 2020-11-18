@@ -5,21 +5,54 @@ import os
 import pandas as pd
 
 
+def clean_text(text):
+    return (
+        text.replace(" ,", ",")
+        .replace(" .", ".")
+        .replace(" !", "!")
+        .replace(" ?", "?")
+        .replace(" :", ":")
+        .replace(" ;", ";")
+        .replace(" %", "%")
+        .replace("`` ", '"')
+        .replace(" ''", '"')
+        .replace("-LRB-", "(")
+        .replace("-RRB-", ")")
+        .replace("( ", "(")
+        .replace(" )", ")")
+        .replace("can not", "cannot")
+        .replace(" o ", "o ")
+        .replace(" x,", "x,")
+        .replace(" -", "-")
+        .replace("- ", "-")
+        .replace("+ ", "+")
+        .replace(" +", "+")
+        .replace(" >", ">")
+        .replace("> ", ">")
+        .replace("  ", " ")
+    )
+
+
 def format(inputfile):
     df = pd.read_csv(inputfile)
     contexts, questions, answers, start_idx, end_idx = [], [], [], [], []
     for i, row in df.iterrows():
-        contexts.extend([row["Text"], row["Text"]])
+        text, cause, effect = (
+            clean_text(row["Text"]),
+            clean_text(row["Cause"]).strip(".,!?'\"-'` "),
+            clean_text(row["Effect"]).strip(".,!?'\"-'` "),
+        )
+        contexts.extend([text, text])
         questions.extend([row["cause_question"], row["effect_question"]])
-        answers.extend([row["Cause"], row["Effect"]])
+        answers.extend([cause, effect])
 
-        cause_start = row["Text"].find(row["Cause"])
+        cause_start = text.find(cause)
         start_idx.append(cause_start)
-        end_idx.append(cause_start + len(row["Cause"]) - 1)
+        end_idx.append(cause_start + len(cause) - 1)
 
-        effect_start = row["Text"].find(row["Effect"])
+        effect_start = text.find(effect)
         start_idx.append(effect_start)
-        end_idx.append(effect_start + len(row["Effect"]) - 1)
+        end_idx.append(effect_start + len(effect) - 1)
 
     df_out = pd.DataFrame()
     df_out["context"] = contexts

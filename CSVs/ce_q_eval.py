@@ -1,12 +1,12 @@
 """Heavily inspired by the official SQuAD evaluation script"""
 
 import argparse
-import collections
+from collections import Counter, defaultdict
 import re
 import string
 
 import pandas as pd
-
+from latextable import *
 
 def normalize_answer(s):
     """Lower text and remove punctuation, articles and extra whitespace."""
@@ -31,7 +31,7 @@ def normalize_answer(s):
 def compute_recall(phrase, question):
     phrase_toks = normalize_answer(phrase).split()
     question_toks = normalize_answer(question).split()
-    common = collections.Counter(phrase_toks) & collections.Counter(question_toks)
+    common = Counter(phrase_toks) & Counter(question_toks)
     num_same = sum(common.values())
     if len(phrase_toks) == 0 or len(question_toks) == 0:
         return int(phrase_toks == question_toks)
@@ -42,10 +42,41 @@ def compute_recall(phrase, question):
 
 def main(inputfile):
     df = pd.read_csv(inputfile)
+    patterns = pd.read_csv("patterns.csv")
     cause_recalls, effect_recalls = [], []
+    cause_recalls_typology, effect_recalls_typology, typology_counts = (
+        defaultdict(lambda: 0),
+        defaultdict(lambda: 0),
+        defaultdict(lambda: 0),
+    )
     for i, row in df.iterrows():
-        cause_recalls.append(compute_recall(row["Cause"], row["effect_question"]))
-        effect_recalls.append(compute_recall(row["Effect"], row["cause_question"]))
+        cause_recall = compute_recall(row["Cause"], row["effect_question"])
+        effect_recall = compute_recall(row["Effect"], row["cause_question"])
+        cause_recalls.append(cause_recall)
+        effect_recalls.append(effect_recall)
+        pattern = patterns.loc[patterns["pid"] == row["PatternID"]].iloc[0]
+        cause_recalls_typology[
+            (pattern["table"], pattern["line"], pattern["col"])
+        ] += cause_recall
+        effect_recalls_typology[
+            (pattern["table"], pattern["line"], pattern["col"])
+        ] += effect_recall
+        typology_counts[(pattern["table"], pattern["line"], pattern["col"])] += 1
+
+    typology_table = [["Pattern", "Count", "Average Cause Recall", "Average Effect Recall"]]
+    for key in typology_counts:
+        print(f"{key}: {typology_counts[key]}")
+        print(f"Cause: {cause_recalls_typology[key] / typology_counts[key]}")
+        print(f"Effect: {effect_recalls_typology[key] / typology_counts[key]}")
+        print("=" * 50)
+        typology_table.append([key, typology_counts[key], cause_recalls_typology[key] / typology_counts[key], effect_recalls_typology[key] / typology_counts[key]])
+    
+    table = Texttable()
+    table.add_rows(typology_table)
+    print(table.draw() + "\n")
+    print(draw_latex(table, caption="An example table.") + "\n")
+
+
     df["cause_recalls"] = cause_recalls
     df["effect_recalls"] = effect_recalls
     df.to_csv(inputfile)
