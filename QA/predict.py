@@ -3,6 +3,7 @@ import argparse
 
 import pandas as pd
 from transformers import AutoModelForQuestionAnswering, AutoTokenizer
+from transformers.data.metrics.squad_metrics import compute_f1
 import torch
 from tqdm import tqdm
 
@@ -14,7 +15,7 @@ def predict(filename, model_checkpoint):
         "deepset/bert-large-uncased-whole-word-masking-squad2"
     )
     model = AutoModelForQuestionAnswering.from_pretrained(model_checkpoint)
-    answers = []
+    answers, scores = [], []
     with tqdm(total=len(df)) as pbar:
         for i, row in tqdm(df.iterrows()):
             inputs = tokenizer(
@@ -32,9 +33,13 @@ def predict(filename, model_checkpoint):
                 tokenizer.convert_ids_to_tokens(input_ids[answer_start:answer_end])
             )
             answers.append(answer)
+            if "answer" in row:
+                scores.append(compute_f1(row["answer"], answer))
             pbar.update(1)
 
     df["predicted_answer"] = answers
+    if scores:
+        df["score"] = scores
     df.to_csv(filename)
 
 
