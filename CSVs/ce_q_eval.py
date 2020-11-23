@@ -67,12 +67,19 @@ def ce_recall_eval(inputfile):
 
     for key in sorted(typology_counts.keys()):
         print(f"{key}: {typology_counts[key]}")
-        print(f"Cause: {cause_recalls_typology[key] / typology_counts[key]}")
-        print(f"Effect: {effect_recalls_typology[key] / typology_counts[key]}")
+        print(f"Recall: {(cause_recalls_typology[key] + effect_recalls_typology[key]) / 2 / typology_counts[key]}")
         print("=" * 50)
     
-    print("Average Cause Recall:", np.mean(cause_recalls))
-    print("Average Effect Recall:", np.mean(effect_recalls))
+    for i in range(1, 5):
+        count = np.sum([typology_counts[key] for key in typology_counts if key[0] == i])
+        total = np.sum([
+                    (cause_recalls_typology[key] + effect_recalls_typology[key]) / 2 
+                    for key in typology_counts 
+                    if key[0] == i
+                ])
+        print(f"Typology Category {i}: {count}")
+        print(f"Average Recall: {total/count}")
+
 
 
     df["cause_recalls"] = cause_recalls
@@ -113,6 +120,16 @@ def qa_typology(inputfile):
         print(f"# of Pattern {key}: {counts[key]}")
         print(f"Average Score: {scores[key] / counts[key]}")
         print("=" * 50)
+    
+    for i in range(1, 5):
+        count = np.sum([counts[key] for key in counts if key[0] == i])
+        total = np.sum([
+                    scores[key] 
+                    for key in scores 
+                    if key[0] == i
+                ])
+        print(f"Typology Category {i}: {count}")
+        print(f"Average F1: {total/count}")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Parsing arguments")
