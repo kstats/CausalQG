@@ -5,6 +5,7 @@ from collections import Counter, defaultdict
 import re
 import string
 
+import numpy as np
 import pandas as pd
 from latextable import *
 
@@ -63,19 +64,8 @@ def main(inputfile):
         ] += effect_recall
         typology_counts[(pattern["table"], pattern["line"], pattern["col"])] += 1
 
-    typology_table = [["Pattern", "Count", "Average Cause Recall", "Average Effect Recall"]]
-    for key in typology_counts:
-        print(f"{key}: {typology_counts[key]}")
-        print(f"Cause: {cause_recalls_typology[key] / typology_counts[key]}")
-        print(f"Effect: {effect_recalls_typology[key] / typology_counts[key]}")
-        print("=" * 50)
-        typology_table.append([key, typology_counts[key], cause_recalls_typology[key] / typology_counts[key], effect_recalls_typology[key] / typology_counts[key]])
-    
-    table = Texttable()
-    table.add_rows(typology_table)
-    print(table.draw() + "\n")
-    print(draw_latex(table, caption="An example table.") + "\n")
-
+    print("Average Cause Recall:", np.mean(cause_recalls))
+    print("Average Effect Recall:", np.mean(effect_recalls))
 
     df["cause_recalls"] = cause_recalls
     df["effect_recalls"] = effect_recalls
