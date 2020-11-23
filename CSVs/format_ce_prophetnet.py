@@ -33,7 +33,7 @@ def clean_text(text):
     )
 
 
-def format(inputfile):
+def format(inputfile, model):
     df = pd.read_csv(inputfile)
     contexts, questions, answers, start_idx, end_idx = [], [], [], [], []
     for i, row in df.iterrows():
@@ -61,15 +61,15 @@ def format(inputfile):
     df_out["start_idx"] = start_idx
     df_out["end_idx"] = end_idx
     outfile = list(os.path.split(inputfile))
-    outfile[-1] = f"qa_{outfile[-1]}"
+    outfile[-1] = f"qa_{model}_{outfile[-1]}"
     outfile = os.path.join(*outfile)
-    print(outfile)
     df_out.to_csv(outfile)
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Parsing arguments")
     parser.add_argument("--input", type=str, help="path to data")
+    parser.add_argument("--model", type=str, help="path to data")
     args = parser.parse_args()
     if args.input:
-        format(args.input)
+        format(args.input, args.model)

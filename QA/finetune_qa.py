@@ -128,13 +128,13 @@ if __name__ == "__main__":
     parser.add_argument("--train_data", type=str, help="path to training data")
     parser.add_argument("--valid_data", type=str, help="path to validation data")
     parser.add_argument(
-        "--train_batch_size", type=int, default=16, help="size of training batch"
+        "--train_batch_size", type=int, default=4, help="size of training batch"
     )
     parser.add_argument(
         "--num_iters", type=int, default=10, help="size of training batch"
     )
     parser.add_argument(
-        "--valid_batch_size", type=int, default=16, help="size of validation batch"
+        "--valid_batch_size", type=int, default=4, help="size of validation batch"
     )
     parser.add_argument("--output_dir", type=str, default="", help="output directory")
     args = parser.parse_args()

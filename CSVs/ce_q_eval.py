@@ -4,7 +4,9 @@ import argparse
 from collections import Counter, defaultdict
 import re
 import string
+import os
 
+import numpy as np
 import pandas as pd
 from latextable import *
 
@@ -40,7 +42,7 @@ def compute_recall(phrase, question):
     return num_same / len(phrase_toks)
 
 
-def main(inputfile):
+def ce_recall_eval(inputfile):
     df = pd.read_csv(inputfile)
     patterns = pd.read_csv("patterns.csv")
     cause_recalls, effect_recalls = [], []
@@ -63,18 +65,14 @@ def main(inputfile):
         ] += effect_recall
         typology_counts[(pattern["table"], pattern["line"], pattern["col"])] += 1
 
-    typology_table = [["Pattern", "Count", "Average Cause Recall", "Average Effect Recall"]]
-    for key in typology_counts:
+    for key in sorted(typology_counts.keys()):
         print(f"{key}: {typology_counts[key]}")
         print(f"Cause: {cause_recalls_typology[key] / typology_counts[key]}")
         print(f"Effect: {effect_recalls_typology[key] / typology_counts[key]}")
         print("=" * 50)
-        typology_table.append([key, typology_counts[key], cause_recalls_typology[key] / typology_counts[key], effect_recalls_typology[key] / typology_counts[key]])
     
-    table = Texttable()
-    table.add_rows(typology_table)
-    print(table.draw() + "\n")
-    print(draw_latex(table, caption="An example table.") + "\n")
+    print("Average Cause Recall:", np.mean(cause_recalls))
+    print("Average Effect Recall:", np.mean(effect_recalls))
 
 
     df["cause_recalls"] = cause_recalls
@@ -82,9 +80,51 @@ def main(inputfile):
     df.to_csv(inputfile)
 
 
+def qa_typology(inputfile):
+    qa = pd.read_csv(inputfile)
+
+    df = None
+    if os.path.split(inputfile)[0] == "SQuAD":
+        df = pd.read_csv("SQuAD/squad_ce_processed.csv")
+    elif os.path.split(inputfile)[0] == "Textbook":
+        df = pd.read_csv("Textbook/textbook_ce_processed.csv")
+    else:
+        print("Unsupported Directory!")
+        return
+    
+    predicted_cause_score, predicted_effect_score = [], []
+    for i, row in qa.iterrows():
+        if i % 2 == 0:
+            predicted_cause_score.append(row["score"])
+        else:
+            predicted_effect_score.append(row["score"])
+    
+    df["cause_score"], df["effect_score"] = predicted_cause_score, predicted_effect_score
+    patterns = pd.read_csv("patterns.csv")
+
+    scores, counts = defaultdict(lambda: 0), defaultdict(lambda: 0)
+    for i, row in df.iterrows():
+        pattern = patterns.loc[patterns["pid"] == row["PatternID"]].iloc[0]
+        scores[(pattern["table"], pattern["line"], pattern["col"])] += row["cause_score"] + row["effect_score"]
+        counts[(pattern["table"], pattern["line"], pattern["col"])] += 2
+
+    print("=" * 50)
+    for key in sorted(counts.keys()):
+        print(f"# of Pattern {key}: {counts[key]}")
+        print(f"Average Score: {scores[key] / counts[key]}")
+        print("=" * 50)
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Parsing arguments")
     parser.add_argument("--input", type=str, help="path to data")
+    parser.add_argument("--ce_recall", action="store_true", help="path to data")
+    parser.add_argument("--qa_typology", action="store_true", help="path to data")
     args = parser.parse_args()
-    if args.input:
-        main(args.input)
+
+    if not args.input:
+        print("Must specify input file")
+        exit(-1)
+    if args.ce_recall:
+        ce_recall_eval(args.input)
+    if args.qa_typology:
+        qa_typology(args.input)
