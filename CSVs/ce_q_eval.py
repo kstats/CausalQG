@@ -8,7 +8,6 @@ import os
 
 import numpy as np
 import pandas as pd
-from latextable import *
 
 def normalize_answer(s):
     """Lower text and remove punctuation, articles and extra whitespace."""
@@ -134,8 +133,8 @@ def qa_typology(inputfile):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Parsing arguments")
     parser.add_argument("--input", type=str, help="path to data")
-    parser.add_argument("--ce_recall", action="store_true", help="path to data")
-    parser.add_argument("--qa_typology", action="store_true", help="path to data")
+    parser.add_argument("--ce_recall", action="store_true", help="calculate cause/effect recall")
+    parser.add_argument("--qa_typology", action="store_true", help="analyze QA scores for questions broken down by typology")
     args = parser.parse_args()
 
     if not args.input:
