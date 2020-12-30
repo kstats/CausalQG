@@ -124,7 +124,7 @@ def finetune(args):
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Parsing arguments")
+    parser = argparse.ArgumentParser(description="Script to finetune a QA model of a given set of data")
     parser.add_argument("--train_data", type=str, help="path to training data")
     parser.add_argument("--valid_data", type=str, help="path to validation data")
     parser.add_argument(

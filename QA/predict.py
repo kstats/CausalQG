@@ -74,7 +74,7 @@ def predict(filename, model_checkpoint):
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Parsing arguments")
+    parser = argparse.ArgumentParser(description="Script to run QA inference on a given csv of questions")
     parser.add_argument("--input", type=str, help="path to input file")
     parser.add_argument(
         "--model",

@@ -67,9 +67,9 @@ def format(inputfile, model):
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Parsing arguments")
+    parser = argparse.ArgumentParser(description="Script to prepare ProphetNet outputted questions to be evaluated by a QA model")
     parser.add_argument("--input", type=str, help="path to data")
-    parser.add_argument("--model", type=str, help="path to data")
+    parser.add_argument("--model", type=str, help="which qa model will be used to answer these questions")
     args = parser.parse_args()
     if args.input:
         format(args.input, args.model)

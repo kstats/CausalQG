@@ -1,5 +1,3 @@
-# Script to clean the datasets to ensure consistency between parsed causes/effects and original text.
-# If there are issues finding exact answer spans, use this script to clean the dataset.
 import pandas as pd
 import argparse
 
@@ -44,7 +42,7 @@ def clean(inputfile):
     df.to_csv(inputfile)
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Parsing arguments")
+    parser = argparse.ArgumentParser(description="Script to clean the datasets to ensure consistency between parsed causes/effects and original text. If there are issues finding exact answer spans, use this script to clean the dataset.")
     parser.add_argument("--input", type=str, help="path to data")
     args = parser.parse_args()
     if args.input:
