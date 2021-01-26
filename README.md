@@ -16,7 +16,7 @@ To begin the pipeline, move into the `CausalExtraction` directory and follow all
 
 ### 2) Question Generation
 
-We perform question generation using ProphetNet. We created a [fork](https://github.com/ManavR123/ProphetNet) of the [microsoft/ProphetNet](https://github.com/microsoft/ProphetNet) repo with scripts to recreate our outputs. Follow the documentation provided in the forked repo to reproduce our generated questions.
+We perform question generation using ProphetNet. We created a [fork](https://github.com/ManavR123/ProphetNet/tree/CausalQG) of the [microsoft/ProphetNet](https://github.com/microsoft/ProphetNet) repo with scripts to recreate our outputs. Follow the documentation provided in the forked repo to reproduce our generated questions.
 
 In our experiments, we generated 4 sets of questions using 4 different versions of ProphetNet:
 
