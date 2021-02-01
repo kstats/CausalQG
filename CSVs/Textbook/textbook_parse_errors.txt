@@ -1,0 +1,5 @@
+E: This means that as the Earth rotates, one hemisphere has longer days with shorter nights.
+E: Methane levels are about 2 1/2 times higher as a result of human activity.
+E: May June July August September October November December Average Number of Tornadoes 17 33 74 371 279 251 122 57 39 65 39 34 Line graphs are especially useful for showing changes over time, or time trends in data, such as how the average number of tornadoes varies throughout the year.
+E: Therefore, a line graph would be a good choice to display the data in the Table 1.3.
+0, 4, 31607

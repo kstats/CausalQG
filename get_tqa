@@ -1,2 +1,0 @@
-wget --no-check-certificate https://ai2-datasets.s3-us-west-2.amazonaws.com/tqa/tqa_train_val_test.zip
-unzip tqa_train_val_test.zip
