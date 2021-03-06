@@ -28,6 +28,8 @@ In our experiments, we generated 4 sets of questions using 4 different versions 
 
 4) ProphetNet finetuned on a combined set of SQuAD and SynQG questions. You should label the csv of questions generated from this version as `squad_ce_processed_prophetnet_combined.csv` or `textbook_ce_processed_prophetnet_combined.csv`.
 
+5) You can use the squad_read.py script to preprocess the SQUAD data to produce 3-sentence chunks, which are used causal extraction. 
+
 The data used for finetuning ProphetNet can be found in `CSVs/Finetune`. Follow the steps in the above repo to run the finetuning process.
 
 Move these into their respective folders in `CSVs/`.
