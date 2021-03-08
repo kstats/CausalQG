@@ -18,15 +18,11 @@ To begin the pipeline, move into the `CausalExtraction` directory and follow all
 
 We perform question generation using ProphetNet. We created a [fork](https://github.com/ManavR123/ProphetNet/tree/CausalQG) of the [microsoft/ProphetNet](https://github.com/microsoft/ProphetNet) repo with scripts to recreate our outputs. Follow the documentation provided in the forked repo to reproduce our generated questions.
 
-In our experiments, we generated 4 sets of questions using 4 different versions of ProphetNet:
+In our experiments, we generated 2 sets of questions using 2 different versions of ProphetNet:
 
 1) ProphetNet-Base. You should label the csv of questions generated from this version as `squad_ce_processed_prophetnet.csv` or `textbook_ce_processed_prophetnet.csv`.
 
-2) ProphetNet finetuned on SQuAD causal questions. You should label the csv of questions generated from this version as `squad_ce_processed_prophetnet_squad_gold.csv` or `textbook_ce_processed_prophetnet_squad_gold.csv`.
-
-3) ProphetNet finetuned on questions generated from SynQG. You should label the csv of questions generated from this version as `squad_ce_processed_prophetnet_synqg.csv` or `textbook_ce_processed_prophetnet_synqg.csv`.
-
-4) ProphetNet finetuned on a combined set of SQuAD and SynQG questions. You should label the csv of questions generated from this version as `squad_ce_processed_prophetnet_combined.csv` or `textbook_ce_processed_prophetnet_combined.csv`.
+2) ProphetNet finetuned on questions generated from SynQG. You should label the csv of questions generated from this version as `squad_ce_processed_prophetnet_synqg.csv` or `textbook_ce_processed_prophetnet_synqg.csv`.
 
 The data used for finetuning ProphetNet can be found in `CSVs/Finetune`. Follow the steps in the above repo to run the finetuning process.
 
@@ -38,9 +34,9 @@ we evaluate our system using two approaches:
 
 ### 1) Question-Answering
 
-We hypothesize that a good cause/effect question will be able to be answered by a strong QA system. We use 4 different QA models to evaluate the quality of our causal questions. The base model is provided by deepset and hosted by HuggingFace/tranformers. We then finetune this model on three datasets of causal questions: the sames ones used to fine tune the QG model. To perform the finetuning move into the `QA/` directory and use the `finetune_qa.py` script.
+We hypothesize that a good cause/effect question will be able to be answered by a strong QA system. We use 2 different QA models to evaluate the quality of our causal questions. The base model is provided by deepset and hosted by HuggingFace/tranformers. We then finetune this model on a dataset of causal questions: the sames one used to fine tune the QG model. To perform the finetuning move into the `QA/` directory and use the `finetune_qa.py` script.
 
-Then, to use the various models to generate answers for a given csv of questions, use `QA/predict.py`. To prepare the ProphetNet questions for the QA input, use `format_ce_prophetnet.py`. In this step, you will produce 4 output csvs beginning with `qa_` for each csv of questions generated in the question-generation step.
+Then, to use the various models to generate answers for a given csv of questions, use `QA/predict.py`. To prepare the ProphetNet questions for the QA input, use `format_ce_prophetnet.py`. In this step, you will produce 2 output csvs beginning with `qa_` for each csv of questions generated in the question-generation step.
 
 You can then use the `ce_q_eval.py` scripts found in `CSVs/` to get an analysis of QA performance broken down by typology.
 
