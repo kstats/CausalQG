@@ -1,0 +1,339 @@
+<!-- You must include this JavaScript file -->
+<script src="https://assets.crowd.aws/crowd-html-elements.js"></script>
+
+<!-- For the full list of available Crowd HTML Elements and their input/output documentation,
+      please refer to https://docs.aws.amazon.com/sagemaker/latest/dg/sms-ui-template-reference.html -->
+
+<!-- You must include crowd-form so that your task submits answers to MTurk -->
+<crowd-form answer-format="flatten-objects">
+<!-- Bootstrap v3.0.3 -->
+<link href="https://s3.amazonaws.com/mturk-public/bs30/css/bootstrap.min.css" rel="stylesheet" />
+<section class="container" id="Other" style="margin-bottom:15px; padding: 10px 10px; font-family: Verdana, Geneva, sans-serif; color:#333333; font-size:0.9em;">
+<div class="row col-xs-12 col-md-12"><!-- Instructions -->
+<div class="panel panel-primary" style="width: 70%; max-width: 800">
+	<div class="panel-heading"><strong>Instructions</strong></div>
+
+<div class="panel-body" style="width: 100%; max-width: 800">
+	<p>We are evaluating a system which automatically extracts cause-and-effect pairs from text.</p>
+	<p>A <b>cause</b> is something which directly results in an <u>effect</u>.</p> 
+	<p>You will be given a 2-3 sentence passage to read and a pair of phrases extracted from the passage. Your task will be to determine if the pair of phrases are</p>
+	<ol type="A">
+		<li><b>Causal:</b> After reading the passage, you can conclude that the extracted cause DOES result in the extracted effect.</li> 
+		<li><b>Not Causal:</b> After reading the passage, you can conclude that the extracted cause does NOT result in the extracted effect.</li>
+	</ol>
+	<p>Let's take a look at the following example. We have this passage with the intended <b>cause</b> highlighted in orange and the intended <u>effect</u> highlighted in blue.</p>
+	<div class=container style="position:relative; background-color: #E8E8E8; width:100%">
+	<div class="column" style="width:85%; float:left; position:relative; ">
+		Temperatures and pressures at the center of the cloud were extreme. <span style="background-color: #FF8065"><b>It was so hot</b></span> that <span style="background-color: #85C0F9"><u>nuclear fusion reactions began</u></span>. In these reactions hydrogen fuses to make helium.
+	</div>
+	</div>
+	<br />
+	<p>The above example would be labeled <b>Causal</b> because the <b>possible cause</b> (it being hot) results in the <u>possible effect</u> (the nuclear fusion reaction beginning).</p>
+	<p>The following example, on the other hand, would be labeled <b>Not Causal</b>
+	<div class=container style="position:relative; background-color: #E8E8E8; width:100%">
+	<div class="column" style="width:85%; float:left; position:relative; ">
+		Sediments are different sizes of rock particles. <span style="background-color: #FF8065"><b>Boulders are sediments</b></span>; <span style="background-color: #85C0F9"><u>so is gravel</u></span>. At the other end, silt and clay are also sediments.
+	</div>
+	</div>
+	<br />
+	<p>This example is <b>Not Causal</b> because boulders being sediments does NOT directly result in gravel being sediments.  These are two independent facts that are not causally related.</p>
+	<p>There are 10 total passages for you to review. For 2 of the passages, please provide a one-sentence justification for your choice in the provided text box.</p>
+	
+
+</section>
+
+
+
+
+
+
+<fieldset>
+	<div class="rankDivs"  style="width: 100%; max-width: 800">
+	<div style="width:100%; max-width:800; background-color: #E8E8E8; float:left; position:relative; ">
+		${Passage1}
+	</div>
+		<br/>
+	   <tr style="">
+       	 <td style="font-size: small;" >
+			<select id="causal_0" name="causal_0">
+			  <option value="">--Please choose an option--</option>
+			  <option value="causal">Causal</option>
+			  <option value="notcausal">Not Causal</option>
+			</select>
+			<input type="textarea" id="exp_0" name="exp_0" placeholder="Explanation" style="visibility:visble"><br><br>
+
+	     </td>
+	     </tr>
+	   
+	<br /><br /><br />
+	</div>
+</fieldset>
+
+
+
+
+
+<fieldset>
+	<div class="rankDivs"  style="width: 100%; max-width: 800">
+	<div style="width:100%; max-width:800; background-color: #E8E8E8; float:left; position:relative; ">
+		${Passage2}
+	</div>
+		<br/>
+	   <tr style="">
+       	 <td style="font-size: small;" >
+			<select id="causal_1" name="causal_1">
+			  <option value="">--Please choose an option--</option>
+			  <option value="causal">Causal</option>
+			  <option value="notcausal">Not Causal</option>
+			</select>
+
+	     </td>
+	     </tr>
+	   
+	<br /><br /><br />
+	</div>
+</fieldset>
+
+
+
+
+
+<fieldset>
+	<div class="rankDivs"  style="width: 100%; max-width: 800">
+	<div style="width:100%; max-width:800; background-color: #E8E8E8; float:left; position:relative; ">
+		${Passage3}
+	</div>
+		<br/>
+	   <tr style="">
+       	 <td style="font-size: small;" >
+			<select id="causal_2" name="causal_2">
+			  <option value="">--Please choose an option--</option>
+			  <option value="causal">Causal</option>
+			  <option value="notcausal">Not Causal</option>
+			</select>
+
+	     </td>
+	     </tr>
+	   
+	<br /><br /><br />
+	</div>
+</fieldset>
+
+
+
+
+
+<fieldset>
+	<div class="rankDivs"  style="width: 100%; max-width: 800">
+	<div style="width:100%; max-width:800; background-color: #E8E8E8; float:left; position:relative; ">
+		${Passage4}
+	</div>
+		<br/>
+	   <tr style="">
+       	 <td style="font-size: small;" >
+			<select id="causal_3" name="causal_3">
+			  <option value="">--Please choose an option--</option>
+			  <option value="causal">Causal</option>
+			  <option value="notcausal">Not Causal</option>
+			</select>
+
+	     </td>
+	     </tr>
+	   
+	<br /><br /><br />
+	</div>
+</fieldset>
+
+
+
+
+
+<fieldset>
+	<div class="rankDivs"  style="width: 100%; max-width: 800">
+	<div style="width:100%; max-width:800; background-color: #E8E8E8; float:left; position:relative; ">
+		${Passage5}
+	</div>
+		<br/>
+	   <tr style="">
+       	 <td style="font-size: small;" >
+			<select id="causal_4" name="causal_4">
+			  <option value="">--Please choose an option--</option>
+			  <option value="causal">Causal</option>
+			  <option value="notcausal">Not Causal</option>
+			</select>
+
+	     </td>
+	     </tr>
+	   
+	<br /><br /><br />
+	</div>
+</fieldset>
+
+
+
+
+
+<fieldset>
+	<div class="rankDivs"  style="width: 100%; max-width: 800">
+	<div style="width:100%; max-width:800; background-color: #E8E8E8; float:left; position:relative; ">
+		${Passage6}
+	</div>
+		<br/>
+	   <tr style="">
+       	 <td style="font-size: small;" >
+			<select id="causal_5" name="causal_5">
+			  <option value="">--Please choose an option--</option>
+			  <option value="causal">Causal</option>
+			  <option value="notcausal">Not Causal</option>
+			</select>
+
+	     </td>
+	     </tr>
+	   
+	<br /><br /><br />
+	</div>
+</fieldset>
+
+
+
+
+
+<fieldset>
+	<div class="rankDivs"  style="width: 100%; max-width: 800">
+	<div style="width:100%; max-width:800; background-color: #E8E8E8; float:left; position:relative; ">
+		${Passage7}
+	</div>
+		<br/>
+	   <tr style="">
+       	 <td style="font-size: small;" >
+			<select id="causal_6" name="causal_6">
+			  <option value="">--Please choose an option--</option>
+			  <option value="causal">Causal</option>
+			  <option value="notcausal">Not Causal</option>
+			</select>
+
+	     </td>
+	     </tr>
+	   
+	<br /><br /><br />
+	</div>
+</fieldset>
+
+
+
+
+
+<fieldset>
+	<div class="rankDivs"  style="width: 100%; max-width: 800">
+	<div style="width:100%; max-width:800; background-color: #E8E8E8; float:left; position:relative; ">
+		${Passage8}
+	</div>
+		<br/>
+	   <tr style="">
+       	 <td style="font-size: small;" >
+			<select id="causal_7" name="causal_7">
+			  <option value="">--Please choose an option--</option>
+			  <option value="causal">Causal</option>
+			  <option value="notcausal">Not Causal</option>
+			</select>
+
+	     </td>
+	     </tr>
+	   
+	<br /><br /><br />
+	</div>
+</fieldset>
+
+
+
+
+
+<fieldset>
+	<div class="rankDivs"  style="width: 100%; max-width: 800">
+	<div style="width:100%; max-width:800; background-color: #E8E8E8; float:left; position:relative; ">
+		${Passage9}
+	</div>
+		<br/>
+	   <tr style="">
+       	 <td style="font-size: small;" >
+			<select id="causal_8" name="causal_8">
+			  <option value="">--Please choose an option--</option>
+			  <option value="causal">Causal</option>
+			  <option value="notcausal">Not Causal</option>
+			</select>
+
+	     </td>
+	     </tr>
+	   
+	<br /><br /><br />
+	</div>
+</fieldset>
+
+
+
+
+
+<fieldset>
+	<div class="rankDivs"  style="width: 100%; max-width: 800">
+	<div style="width:100%; max-width:800; background-color: #E8E8E8; float:left; position:relative; ">
+		${Passage10}
+	</div>
+		<br/>
+	   <tr style="">
+       	 <td style="font-size: small;" >
+			<select id="causal_9" name="causal_9">
+			  <option value="">--Please choose an option--</option>
+			  <option value="causal">Causal</option>
+			  <option value="notcausal">Not Causal</option>
+			</select>
+			<input type="textarea" id="exp_9" name="exp_9" placeholder="Explanation" style="visibility:visble"><br><br>
+
+	     </td>
+	     </tr>
+	   
+	<br /><br /><br />
+	</div>
+</fieldset>
+
+
+<br /><br /><br /><br /><fieldarea>Tell us any feedback you have on the task (Optional)<br/><textarea name="optionalfeedback" rows="2" cols="100" style="resize:none"></textarea><br/>
+<script>
+
+
+
+function checkRanks(){
+	for(i=0; i < 10; i++){
+		elem = document.getElementById('causal_' + i);
+		if (elem.value == ""){
+			window.alert("Please select an option for every question.");
+			return false;
+		}
+
+		elem2 = document.getElementById('exp_0');
+		
+		if (elem2.value.split(' ').length < 7){
+			window.alert("Please include a longer explanation for cause/effects decision (7+ words required).")
+			return false
+		}
+		elem2 = document.getElementById('exp_9');
+		
+		if (elem2.value.split(' ').length < 7){
+			window.alert("Please include a longer explanation for cause/effects decision (7+ words required).")
+			return false
+		}
+		
+	}
+	return true;
+}
+document.querySelector('crowd-form').onsubmit = function(e ) {
+    if (!checkRanks()) {
+        e.preventDefault();
+    }
+}
+</script>
+
+
+
+ 
+ 
+</crowd-form>

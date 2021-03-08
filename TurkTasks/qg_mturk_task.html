@@ -1,0 +1,503 @@
+<!-- You must include this JavaScript file -->
+<script src="https://assets.crowd.aws/crowd-html-elements.js"></script>
+
+<!-- For the full list of available Crowd HTML Elements and their input/output documentation,
+      please refer to https://docs.aws.amazon.com/sagemaker/latest/dg/sms-ui-template-reference.html -->
+
+<!-- You must include crowd-form so that your task submits answers to MTurk -->
+<crowd-form answer-format="flatten-objects">
+<!-- Bootstrap v3.0.3 -->
+<link href="https://s3.amazonaws.com/mturk-public/bs30/css/bootstrap.min.css" rel="stylesheet" />
+<section class="container" id="Other" style="margin-bottom:15px; padding: 10px 10px; font-family: Verdana, Geneva, sans-serif; color:#333333; font-size:0.9em;">
+<div class="row col-xs-12 col-md-12"><!-- Instructions -->
+<div class="panel panel-primary" style="width: 70%; max-width: 800">
+	<div class="panel-heading"><strong>Instructions</strong></div>
+
+<div class="panel-body" style="width: 100%; max-width: 800">
+	<p>We are evaluating a system which aims to generate causal questions from text.</p>
+	<p>You will be given a 2-3 sentence passage to read and a potential answer extracted from the passage. Your task will be to determine:</p>
+	<ol type="A">
+		<li><b>Is the question causal?</b> A <b>cause</b> is something which directly results in an <u>effect</u>.  The answer to a causal question is either the cause or the effect.  If the cause is the intended answer, the question should include information about the effect and vice versa.  "Why" questions are an example of a causal question type; however these can be worded in more creative ways ("what is the result of," "what would happen if," etc.)</li>
+		<li><b>Is the answer correct?</b> Whether or not the question is causal, does the highlighted section correctly answer the question?</li> 
+	</ol>
+	<p>Let's take a look at the following example. We have this passage with the <b>intended answer</b> highlighted in orange</p>
+	<div class=container style="position:relative; background-color: #E8E8E8; width:100%">
+	<div class="column" style="width:85%; float:left; position:relative; ">
+		Gas molecules are very far apart in this layer, but they are really hot. <span style="background-color: #FF8065"><b>Earths gravity is so weak</span></b> in the exosphere that gas molecules sometimes just float off into space. 
+	</div>
+	</div>
+	<b>Question: why do gas molecules sometimes float off into space ?</b>
+	<br />
+	<br />
+	<p><b>Is the question causal?</b>  Yes, the question tests knowledge of a cause-and-effect relationship.  The intended answer is the cause in this relationship.</p>
+	<p><b>Is the answer correct?</b>  Yes, reading the passage it is clear that the weak gravity causes molecules to sometimes float into space.</p>
+	<br/>
+	Now, let's look at a similar example where the effect is the intended answer: <br />
+	<br />
+	<div class=container style="position:relative; background-color: #E8E8E8; width:100%">
+	<div class="column" style="width:85%; float:left; position:relative; ">
+		Gas molecules are very far apart in this layer, but they are really hot. Earths gravity is so weak in the exosphere that <span style="background-color: #FF8065"><b>gas molecules sometimes just float off into space</span></b>. 
+	</div>
+	</div>
+	<b>Question: what happens when earths gravity is so weak in the exosphere ?</b>
+	<br />
+	<br/>
+	<p><b>Is the question causal?</b>  Yes, the question tests knowledge of a cause-and-effect relationship. The intended answer is the effect in this relationship.</p>
+	<p><b>Is the answer correct?</b>  Yes, reading the passage shows that the heat caused the nuclear fusion reaction to begin in the cloud.</p>
+	<br/>
+
+	<p>If the question is too ungrammatical or ill-formatted to comprehend, please select the checkbox and explain why.  This does NOT include capitalization issues. </p>
+	<p>There are 10 total passages for you to review. For 2 of the passages, please provide a one-sentence justification for each of your choices in each of the provided text boxes.</p>
+	
+
+</section>
+
+
+
+
+
+
+<fieldset>
+	<div class="rankDivs"  style="width: 100%; max-width: 800">
+	<div style="width:100%; max-width:800; background-color: #E8E8E8; float:left; position:relative; ">
+		${Passage1}
+	</div>
+		<br/>
+		<b>Question: ${Question1}</b>
+		<br/><br/>
+	   <tr style="">
+       	 <td style="font-size: small;" >
+			<select id="causal_0" name="causal_0">
+			  <option value="">--Is the question causal?--</option>
+			  <option value="causal">Yes, the question is causal</option>
+			  <option value="notcausal">No, the question is not causal</option>
+			</select>
+			<input type="textarea" id="exp_causal_0" name="exp_causal_0" placeholder="Explanation" style="visibility:visble"><br><br>
+
+			<select id="ans_0" name="ans_0">
+			  <option value="">--Is the answer correct?--</option>
+			  <option value="yes">Yes, the answer is correct</option>
+			  <option value="no">No, the answer is not correct</option>
+			</select>
+			<input type="textarea" id="exp_ans_0" name="exp_ans_0" placeholder="Explanation" style="visibility:visble"><br><br>
+			<input type="checkbox" id="ungrammatical_0" name="ungrammatical_0" onclick="checkboxHandler()">Qustion is too ungrammatical to evaluate
+	     	<input type="textarea" id="ungrammatical_exp_0" name="ungrammatical_exp_0" placeholder="Explanation" style="visibility:hidden"><br><br>
+
+	     </td>
+	     </tr>
+	   
+	<br /><br /><br />
+	</div>
+</fieldset>
+
+
+
+
+
+<fieldset>
+	<div class="rankDivs"  style="width: 100%; max-width: 800">
+	<div style="width:100%; max-width:800; background-color: #E8E8E8; float:left; position:relative; ">
+		${Passage2}
+	</div>
+		<br/>
+		<b>Question: ${Question2}</b>
+		<br/><br/>
+	   <tr style="">
+       	 <td style="font-size: small;" >
+       	 <select id="causal_1" name="causal_1">
+			  <option value="">--Is the question causal?--</option>
+			  <option value="causal">Yes, the question is causal</option>
+			  <option value="notcausal">No, the question is not causal</option>
+			</select>
+			<select id="ans_1" name="ans_1">
+			  <option value="">--Is the answer correct?--</option>
+			  <option value="yes">Yes, the answer is correct</option>
+			  <option value="no">No, the answer is not correct</option>
+			</select>
+		<br />
+		  <input type="checkbox" id="ungrammatical_1" name="ungrammatical_1" onclick="checkboxHandler()">Qustion is too ungrammatical to evaluate
+		  <input type="textarea" id="ungrammatical_exp_1" name="ungrammatical_exp_1" placeholder="Explanation" style="visibility:hidden"><br><br>
+
+
+	     </td>
+	     </tr>
+	   
+	<br /><br /><br />
+	</div>
+</fieldset>
+
+
+
+
+
+<fieldset>
+	<div class="rankDivs"  style="width: 100%; max-width: 800">
+	<div style="width:100%; max-width:800; background-color: #E8E8E8; float:left; position:relative; ">
+		${Passage3}
+	</div>
+		<br/>
+		<b>Question: ${Question3}</b>
+		<br/><br/>
+	   <tr style="">
+       	 <td style="font-size: small;" >
+       	 <select id="causal_2" name="causal_2">
+			  <option value="">--Is the question causal?--</option>
+			  <option value="causal">Yes, the question is causal</option>
+			  <option value="notcausal">No, the question is not causal</option>
+			</select>
+			<select id="ans_2" name="ans_2">
+			  <option value="">--Is the answer correct?--</option>
+			  <option value="yes">Yes, the answer is correct</option>
+			  <option value="no">No, the answer is not correct</option>
+			</select>
+		<br />
+		  <input type="checkbox" id="ungrammatical_2" name="ungrammatical_2" onclick="checkboxHandler()">Qustion is too ungrammatical to evaluate
+		  <input type="textarea" id="ungrammatical_exp_2" name="ungrammatical_exp_2" placeholder="Explanation" style="visibility:hidden"><br><br>
+
+
+	     </td>
+	     </tr>
+	   
+	<br /><br /><br />
+	</div>
+</fieldset>
+
+
+
+
+
+<fieldset>
+	<div class="rankDivs"  style="width: 100%; max-width: 800">
+	<div style="width:100%; max-width:800; background-color: #E8E8E8; float:left; position:relative; ">
+		${Passage4}
+	</div>
+		<br/>
+		<b>Question: ${Question4}</b>
+		<br/><br/>
+	   <tr style="">
+       	 <td style="font-size: small;" >
+       	 <select id="causal_3" name="causal_3">
+			  <option value="">--Is the question causal?--</option>
+			  <option value="causal">Yes, the question is causal</option>
+			  <option value="notcausal">No, the question is not causal</option>
+			</select>
+			<select id="ans_3" name="ans_3">
+			  <option value="">--Is the answer correct?--</option>
+			  <option value="yes">Yes, the answer is correct</option>
+			  <option value="no">No, the answer is not correct</option>
+			</select>
+		<br />
+		  <input type="checkbox" id="ungrammatical_3" name="ungrammatical_3" onclick="checkboxHandler()">Qustion is too ungrammatical to evaluate
+		  <input type="textarea" id="ungrammatical_exp_3" name="ungrammatical_exp_3" placeholder="Explanation" style="visibility:hidden"><br><br>
+
+
+	     </td>
+	     </tr>
+	   
+	<br /><br /><br />
+	</div>
+</fieldset>
+
+
+
+
+
+<fieldset>
+	<div class="rankDivs"  style="width: 100%; max-width: 800">
+	<div style="width:100%; max-width:800; background-color: #E8E8E8; float:left; position:relative; ">
+		${Passage5}
+	</div>
+		<br/>
+		<b>Question: ${Question5}</b>
+		<br/><br/>
+	   <tr style="">
+       	 <td style="font-size: small;" >
+       	 <select id="causal_4" name="causal_4">
+			  <option value="">--Is the question causal?--</option>
+			  <option value="causal">Yes, the question is causal</option>
+			  <option value="notcausal">No, the question is not causal</option>
+			</select>
+			<select id="ans_4" name="ans_4">
+			  <option value="">--Is the answer correct?--</option>
+			  <option value="yes">Yes, the answer is correct</option>
+			  <option value="no">No, the answer is not correct</option>
+			</select>
+		<br />
+		  <input type="checkbox" id="ungrammatical_4" name="ungrammatical_4" onclick="checkboxHandler()">Qustion is too ungrammatical to evaluate
+		  <input type="textarea" id="ungrammatical_exp_4" name="ungrammatical_exp_4" placeholder="Explanation" style="visibility:hidden"><br><br>
+
+
+	     </td>
+	     </tr>
+	   
+	<br /><br /><br />
+	</div>
+</fieldset>
+
+
+
+
+
+<fieldset>
+	<div class="rankDivs"  style="width: 100%; max-width: 800">
+	<div style="width:100%; max-width:800; background-color: #E8E8E8; float:left; position:relative; ">
+		${Passage6}
+	</div>
+		<br/>
+		<b>Question: ${Question6}</b>
+		<br/><br/>
+	   <tr style="">
+       	 <td style="font-size: small;" >
+       	 <select id="causal_5" name="causal_5">
+			  <option value="">--Is the question causal?--</option>
+			  <option value="causal">Yes, the question is causal</option>
+			  <option value="notcausal">No, the question is not causal</option>
+			</select>
+			<select id="ans_5" name="ans_5">
+			  <option value="">--Is the answer correct?--</option>
+			  <option value="yes">Yes, the answer is correct</option>
+			  <option value="no">No, the answer is not correct</option>
+			</select>
+		<br />
+		  <input type="checkbox" id="ungrammatical_5" name="ungrammatical_5" onclick="checkboxHandler()">Qustion is too ungrammatical to evaluate
+		  <input type="textarea" id="ungrammatical_exp_5" name="ungrammatical_exp_5" placeholder="Explanation" style="visibility:hidden"><br><br>
+
+
+	     </td>
+	     </tr>
+	   
+	<br /><br /><br />
+	</div>
+</fieldset>
+
+
+
+
+
+<fieldset>
+	<div class="rankDivs"  style="width: 100%; max-width: 800">
+	<div style="width:100%; max-width:800; background-color: #E8E8E8; float:left; position:relative; ">
+		${Passage7}
+	</div>
+		<br/>
+		<b>Question: ${Question7}</b>
+		<br/><br/>
+	   <tr style="">
+       	 <td style="font-size: small;" >
+       	 <select id="causal_6" name="causal_6">
+			  <option value="">--Is the question causal?--</option>
+			  <option value="causal">Yes, the question is causal</option>
+			  <option value="notcausal">No, the question is not causal</option>
+			</select>
+			<select id="ans_6" name="ans_6">
+			  <option value="">--Is the answer correct?--</option>
+			  <option value="yes">Yes, the answer is correct</option>
+			  <option value="no">No, the answer is not correct</option>
+			</select>
+		<br />
+		  <input type="checkbox" id="ungrammatical_6" name="ungrammatical_6" onclick="checkboxHandler()">Qustion is too ungrammatical to evaluate
+		  <input type="textarea" id="ungrammatical_exp_6" name="ungrammatical_exp_6" placeholder="Explanation" style="visibility:hidden"><br><br>
+
+
+	     </td>
+	     </tr>
+	   
+	<br /><br /><br />
+	</div>
+</fieldset>
+
+
+
+
+
+<fieldset>
+	<div class="rankDivs"  style="width: 100%; max-width: 800">
+	<div style="width:100%; max-width:800; background-color: #E8E8E8; float:left; position:relative; ">
+		${Passage8}
+	</div>
+		<br/>
+		<b>Question: ${Question8}</b>
+		<br/><br/>
+	   <tr style="">
+       	 <td style="font-size: small;" >
+       	 <select id="causal_7" name="causal_7">
+			  <option value="">--Is the question causal?--</option>
+			  <option value="causal">Yes, the question is causal</option>
+			  <option value="notcausal">No, the question is not causal</option>
+			</select>
+			<select id="ans_7" name="ans_7">
+			  <option value="">--Is the answer correct?--</option>
+			  <option value="yes">Yes, the answer is correct</option>
+			  <option value="no">No, the answer is not correct</option>
+			</select>
+		<br />
+		  <input type="checkbox" id="ungrammatical_7" name="ungrammatical_7" onclick="checkboxHandler()">Qustion is too ungrammatical to evaluate
+		  <input type="textarea" id="ungrammatical_exp_7" name="ungrammatical_exp_7" placeholder="Explanation" style="visibility:hidden"><br><br>
+
+
+	     </td>
+	     </tr>
+	   
+	<br /><br /><br />
+	</div>
+</fieldset>
+
+
+
+
+
+<fieldset>
+	<div class="rankDivs"  style="width: 100%; max-width: 800">
+	<div style="width:100%; max-width:800; background-color: #E8E8E8; float:left; position:relative; ">
+		${Passage9}
+	</div>
+		<br/>
+		<b>Question: ${Question9}</b>
+		<br/><br/>
+	   <tr style="">
+       	 <td style="font-size: small;" >
+       	 <select id="causal_8" name="causal_8">
+			  <option value="">--Is the question causal?--</option>
+			  <option value="causal">Yes, the question is causal</option>
+			  <option value="notcausal">No, the question is not causal</option>
+			</select>
+			<select id="ans_8" name="ans_8">
+			  <option value="">--Is the answer correct?--</option>
+			  <option value="yes">Yes, the answer is correct</option>
+			  <option value="no">No, the answer is not correct</option>
+			</select>
+		<br />
+		  <input type="checkbox" id="ungrammatical_8" name="ungrammatical_8" onclick="checkboxHandler()">Qustion is too ungrammatical to evaluate
+		  <input type="textarea" id="ungrammatical_exp_8" name="ungrammatical_exp_8" placeholder="Explanation" style="visibility:hidden"><br><br>
+
+
+	     </td>
+	     </tr>
+	   
+	<br /><br /><br />
+	</div>
+</fieldset>
+
+
+
+
+
+<fieldset>
+	<div class="rankDivs"  style="width: 100%; max-width: 800">
+	<div style="width:100%; max-width:800; background-color: #E8E8E8; float:left; position:relative; ">
+		${Passage10}
+	</div>
+		<br/>
+		<b>Question: ${Question10}</b>
+		<br/><br/>
+	   <tr style="">
+       	 <td style="font-size: small;" >
+			<select id="causal_9" name="causal_9">
+			  <option value="">--Is the question causal?--</option>
+			  <option value="causal">Yes, the question is causal</option>
+			  <option value="notcausal">No, the question is not causal</option>
+			</select>
+			<input type="textarea" id="exp_causal_9" name="exp_causal_9" placeholder="Explanation" style="visibility:visble"><br><br>
+
+			<select id="ans_9" name="ans_9">
+			  <option value="">--Is the answer correct?--</option>
+			  <option value="yes">Yes, the answer is correct</option>
+			  <option value="no">No, the answer is not correct</option>
+			</select>
+			<input type="textarea" id="exp_ans_9" name="exp_ans_9" placeholder="Explanation" style="visibility:visble"><br><br>
+			<input type="checkbox" id="ungrammatical_9" name="ungrammatical_9" onclick="checkboxHandler()">Qustion is too ungrammatical to evaluate
+	     	<input type="textarea" id="ungrammatical_exp_9" name="ungrammatical_exp_9" placeholder="Explanation" style="visibility:hidden"><br><br>
+
+	     </td>
+	     </tr>
+	   
+	<br /><br /><br />
+	</div>
+</fieldset>
+
+
+<br /><br /><br /><br /><fieldarea>Tell us any feedback you have on the task (Optional)<br/><textarea name="optionalfeedback" rows="2" cols="100" style="resize:none"></textarea><br/>
+<script>
+
+function checkboxHandler(){
+	for(i=0; i < 10; i++){
+		elem = document.getElementById('ungrammatical_' + i);
+		if (elem.checked){
+			document.getElementById('ungrammatical_exp_'+i).style.visibility = 'visible';
+			document.getElementById('causal_'+i).disabled = true;
+			document.getElementById('ans_'+i).disabled = true;
+			if(i == 0 || i == 9){
+				document.getElementById('exp_causal_'+i).disabled = true;
+				document.getElementById('exp_ans_'+i).disabled = true;
+			}
+			
+		}
+		else{
+			document.getElementById('ungrammatical_exp_'+i).style.visibility = 'hidden';
+			document.getElementById('causal_'+i).disabled = false;
+			document.getElementById('ans_'+i).disabled = false;
+			if(i == 0 || i == 9){
+				document.getElementById('exp_causal_'+i).disabled = false;
+				document.getElementById('exp_ans_'+i).disabled = false;
+			}
+		}
+	}
+}
+
+
+function checkRanks(){
+	for(i=0; i < 10; i++){
+		elem = document.getElementById('ungrammatical_'+i);
+		if (elem.checked){
+			elem2 = document.getElementById('ungrammatical_exp_'+i);
+		
+			if (elem2.value.split(' ').length < 7){
+				window.alert("Please include a longer explanation for decision (7+ words required).")
+				return false
+			}
+		}
+		else{
+			elem = document.getElementById('causal_' + i);
+			if (elem.value == ""){
+				window.alert("Please select an option for every question.");
+				return false;
+			}
+			elem = document.getElementById('ans_' + i);
+			if (elem.value == ""){
+				window.alert("Please select an option for every question.");
+				return false;
+			}
+			if (i == 0){
+			elem2 = document.getElementById('exp_0');
+					
+					if (elem2.value.split(' ').length < 7){
+						window.alert("Please include a longer explanation for decision (7+ words required).")
+						return false
+					}
+			}
+			if (i == 9){
+				elem2 = document.getElementById('exp_9');
+			
+				if (elem2.value.split(' ').length < 7){
+					window.alert("Please include a longer explanation for cause/effects decision (7+ words required).")
+					return false
+				}
+			}
+		}
+		
+
+
+		
+		
+	}
+	return true;
+}
+document.querySelector('crowd-form').onsubmit = function(e ) {
+    if (!checkRanks()) {
+        e.preventDefault();
+    }
+}
+</script>
+
+ 
+</crowd-form>
