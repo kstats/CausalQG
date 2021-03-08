@@ -30,7 +30,7 @@ Move these into their respective folders in `CSVs/`.
 
 ## Evaluation
 
-we evaluate our system using two approaches:
+we evaluate our system using three approaches:
 
 ### 1) Question-Answering
 
@@ -44,10 +44,14 @@ You can then use the `ce_q_eval.py` scripts found in `CSVs/` to get an analysis 
 
 We also hypothesize that a good causal question will include the cause/effect in its text when asking about the other i.e. a question asking about the cause will mention the effect and a question asking about effect will mention the cause. These calculations are done by `ce_q_eval.py`. Move into the `CSVs` directory and run `python ce_q_eval.py --input <path_to_input_file> --ce_recall` to calculate the recall scores. This will also print out an analysis of these scores based on typology.
 
+### 3) Human Evaluation
+
+We have included the HTML files for both human evaluation tasks.  `TurkTasks/causal_mturk_task.html` is the interface for the task where crowdworkers determine if an extracted cause/effect pair is correct.  `TurkTasks/qg_mturk_task.html` is the interface for the task where crowdworkers evaluate generated questions.  They are asked to determine (1) whether the answer is correct for the generated question and (2) whether the question is causal in nature.
+
 ## How to Cite
 
 If you extend or use this work, please cite the paper where it was introduced:
 
-#TODO: add bibtex citation
+#TODO: bibtex citation will be added once anthology is udpated.
 
 Let us know if you have any questions!
