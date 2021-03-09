@@ -122,7 +122,7 @@ def replace_as_new(ce, newpid):
     return ce
 
 if __name__ == "__main__":
-    patterns = pd.read_csv('CausalExtraction/patterns.csv')
+    patterns = pd.read_csv('patterns.csv')
 
     parser = argparse.ArgumentParser(description="Script to post-process CEs")
     parser.add_argument("--infile", type=str, help="path to ce input file") #'CSVs/Textbook/textbook_ce.csv' 'CSVs/SQuAD/squad_ce.csv'

@@ -66,7 +66,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--patterns_path",
         type=str,
-        default="CSVs/patterns_typology.csv",
+        default="../CSVs/patterns_typology.csv",
         help="path to file of patterns",
     )
     parser.add_argument("--num_samples", type=int, help="number of samples")
