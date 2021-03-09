@@ -2,48 +2,74 @@ import argparse
 
 import numpy as np
 import pandas as pd
-import nltk
-from nltk import sent_tokenize
-from nltk.tokenize import word_tokenize
-nltk.download('averaged_perceptron_tagger')
-from nltk.tag import pos_tag
-from collections import Counter
-import csv
-import codecs
-import matplotlib.pyplot as plt
 
 
-#takes in ce from in_filename, and outputs in out_filename n stratified samples based on typology. 
-def sample_ce(in_filename, n, out_filename):
-    #textbook_ce is not nessesarily textbook ce, can be any ce provided by in_filename
-    textbook_ce = pd.read_csv(in_filename)
-    textbook_ce = textbook_ce[['PatternID', 'Text','Cause', 'Effect']]
-    textbook_ce = pd.merge(textbook_ce, patterns, left_on="PatternID", right_on="pid")
-    textbook_ce.groupby(['table', 'line', 'col']).size()
+def sample_ce(in_filename, out_filename, num_samples, patterns_path):
+    """
+    Given a CSV of cause/effects and the PatternID that was used to extract them, randomly sample
+    rows stratified by typology of the patterns.
 
-    #ensure there is min(size(category), 2) sample from each category
-    textbook_small_sample_init = textbook_ce.groupby(['table', 'line', 'col']).apply(lambda x: x.sample(min(len(x), 2)))
+    Inputs:
+        - in_filename: path to input file csv contain rows for PatternID, Text, Cause, Effect
+        - out_filename: path to output file which will contain samples
+        - num_samples: number of samples to return
+        - patterns_path: path to csv containing table of patterns to match PatternID to typology
+    Outputs:
+        - CSV at out_filename containing samples
+    """
+    patterns = pd.read_csv(patterns_path)
 
-    textbook_ce_rest = pd.concat([textbook_ce, textbook_small_sample_init, textbook_small_sample_init]).drop_duplicates(keep=False)
+    ce = pd.read_csv(in_filename)
+    ce = ce[["PatternID", "Text", "Cause", "Effect"]]
+    ce = pd.merge(ce, patterns, left_on="PatternID", right_on="pid")
+    ce.groupby(["table", "line", "col"]).size()
 
-    textbook_small_sample = textbook_ce_rest.groupby(['table', 'line', 'col']).apply(lambda x: x.sample(int(np.rint((n-len(textbook_small_sample_init))*len(x)/len(textbook_ce_rest))))).sample(frac=1)
+    # ensure there is min(size(category), 2) sample from each category
+    small_sample_init = ce.groupby(["table", "line", "col"]).apply(
+        lambda x: x.sample(min(len(x), 2))
+    )
 
-    textbook_small_sample = textbook_small_sample.append(textbook_small_sample_init, ignore_index=False)
+    ce_rest = pd.concat([ce, small_sample_init, small_sample_init]).drop_duplicates(
+        keep=False
+    )
 
-    textbook_small_sample = textbook_small_sample.sample(frac=1)[['Text','Cause', 'Effect']]
-    textbook_small_sample = textbook_small_sample.reset_index(level='line', drop=True)
-    textbook_small_sample = textbook_small_sample.reset_index(level='col', drop=True)
-    textbook_small_sample = textbook_small_sample.reset_index(level='table')
+    small_sample = (
+        ce_rest.groupby(["table", "line", "col"])
+        .apply(
+            lambda x: x.sample(
+                int(
+                    np.rint(
+                        (num_samples - len(small_sample_init)) * len(x) / len(ce_rest)
+                    )
+                )
+            )
+        )
+        .sample(frac=1)
+    )
 
-    textbook_small_sample.to_csv(out_filename, index=False)
+    small_sample = small_sample.append(small_sample_init, ignore_index=False)
+
+    small_sample = small_sample.sample(frac=1)[["Text", "Cause", "Effect"]]
+    small_sample = small_sample.reset_index(level="line", drop=True)
+    small_sample = small_sample.reset_index(level="col", drop=True)
+    small_sample = small_sample.reset_index(level="table")
+
+    small_sample.to_csv(out_filename, index=False)
+
 
 if __name__ == "__main__":
-    patterns = pd.read_csv('CSVs/patterns_typology.csv')
-
-    parser = argparse.ArgumentParser(description="Script to generate n stratified samples based on typology")
+    parser = argparse.ArgumentParser(
+        description="Script to generate n stratified samples based on typology"
+    )
     parser.add_argument("--infile", type=str, help="path to ce input file")
     parser.add_argument("--outfile", type=str, help="path to ce output file")
-    parser.add_argument("--n", type=str, help="number of samples")
+    parser.add_argument(
+        "--patterns_path",
+        type=str,
+        default="CSVs/patterns_typology.csv",
+        help="path to file of patterns",
+    )
+    parser.add_argument("--num_samples", type=int, help="number of samples")
     args = parser.parse_args()
-    if args.infile and args.outfile and args.n:
-        sample_ce(args.infile, int(args.n), args.outfile)
+    if args.infile and args.outfile and args.num_samples:
+        sample_ce(args.infile, args.outfile, args.num_samples, args.patterns_path)
