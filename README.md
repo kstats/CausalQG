@@ -12,7 +12,9 @@ We perform the causal relationship extraction using an approach from [Cao et al]
 
 To begin the pipeline, move into the `CausalExtraction` directory and follow all of the setup instructions. Then run the parsing scripts for the TQA/SQuAD datasets. This should create two csvs: `squad_ce.csv` and `textbook_ce.csv`. Move these into `CSVs/SQuAD/` and `CSVs/Textbook/`, respectively.
 
-#TODO: Add steps for processing new as pattern. This will produce `squad_ce_processed.csv` and `textbook_ce_processed.csv`. Move these into `CSVs/SQuAD/` and `CSVs/Textbook/`, respectively, as well.
+Next, to post-process the CEs run `post_process_CEs.py`. This will reproduce `squad_ce_processed.csv` and `textbook_ce_processed.csv`. Move these into `CSVs/SQuAD/` and `CSVs/Textbook/`, respectively, as well.
+
+To generate CE stratified sampling on typology, first run `get_patterns_typology.py` to get patterns typology or use our provided `CausalExtraction/patterns_typology.csv`, then run stratified_sample.py.
 
 ### 2) Question Generation
 
