@@ -119,7 +119,8 @@ def finetune(args):
         eval_dataset=val_dataset,  # evaluation dataset
     )
     trainer.train()
-    trainer.save_model(f"{args.output_dir}/checkpoints")
+    trainer.save_model(f"{args.output_dir}")
+    tokenizer.save_pretrained(f"{args.output_dir}")
     print(trainer.evaluate())
 
 
