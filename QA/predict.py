@@ -9,8 +9,7 @@ import numpy as np
 from tqdm import tqdm
 
 
-def predict(filename, model_checkpoint):
-    BATCH_SIZE = 32
+def predict(filename, model_checkpoint, batch_size=8):
     tokenizer = AutoTokenizer.from_pretrained(
         "deepset/bert-large-uncased-whole-word-masking-squad2"
     )
@@ -35,21 +34,21 @@ def predict(filename, model_checkpoint):
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
     model = model.to(device)
     predicted_answers, scores = [], []
-    for i in tqdm(range(0, len(answers), BATCH_SIZE)):
+    for i in tqdm(range(0, len(answers), batch_size)):
         batch_ids, batch_attn_masks, batch_ttids = (
-            encodings["input_ids"][i : i + BATCH_SIZE].to(device),
-            encodings["attention_mask"][i : i + BATCH_SIZE].to(device),
-            encodings["token_type_ids"][i : i + BATCH_SIZE].to(device),
+            encodings["input_ids"][i : i + batch_size].to(device),
+            encodings["attention_mask"][i : i + batch_size].to(device),
+            encodings["token_type_ids"][i : i + batch_size].to(device),
         )
 
-        answer_start_scores, answer_end_scores = model(
+        outputs = model(
             input_ids=batch_ids,
             attention_mask=batch_attn_masks,
             token_type_ids=batch_ttids,
         )
-        answer_starts = torch.argmax(answer_start_scores, axis=1)
-        answer_ends = torch.argmax(answer_end_scores, axis=1) + 1
-        for j in range(BATCH_SIZE):
+        answer_starts = torch.argmax(outputs.start_logits, axis=1)
+        answer_ends = torch.argmax(outputs.end_logits, axis=1) + 1
+        for j in range(batch_size):
             if i + j >= len(answers):
                 break
             answer_start, answer_end = answer_starts[j].item(), answer_ends[j].item()
@@ -82,6 +81,7 @@ if __name__ == "__main__":
         default="deepset/bert-large-uncased-whole-word-masking-squad2",
         help="model checkpoints",
     )
+    parser.add_argument("--batch_size", type=int, default=8, help="how large of a batch size to use")
     args = parser.parse_args()
     if args.input:
-        predict(args.input, args.model)
+        predict(args.input, args.model, args.batch_size)
