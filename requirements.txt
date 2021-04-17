@@ -1,5 +1,6 @@
-transformers
-pandas
-numpy
-torch
-tqdm
+transformers==4.5.1
+pandas==1.2.4
+numpy==1.20.2
+torch==1.8.1
+tqdm==4.60.0
+sklearn==0.24.1
