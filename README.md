@@ -36,7 +36,7 @@ we evaluate our system using three approaches:
 
 ### 1) Question-Answering
 
-We hypothesize that a good cause/effect question will be able to be answered by a strong QA system. We use 2 different QA models to evaluate the quality of our causal questions. The base model is provided by deepset and hosted by HuggingFace/tranformers. We then finetune this model on a dataset of causal questions: the sames one used to fine tune the QG model. To perform the finetuning move into the `QA/` directory and use the `finetune_qa.py` script.
+We hypothesize that a good cause/effect question will be able to be answered by a strong QA system. We use 2 different QA models to evaluate the quality of our causal questions. The base model is provided by deepset and hosted by HuggingFace/tranformers. We then finetune this model on a dataset of causal questions: the sames one used to fine tune the QG model. To perform the finetuning move into the `QA/` directory and use the `finetune_qa.py` script. Finetuned model can be found on the HuggingFace model hub [here](https://huggingface.co/manav/causal_qa).
 
 Then, to use the various models to generate answers for a given csv of questions, use `QA/predict.py`. To prepare the ProphetNet questions for the QA input, use `format_ce_prophetnet.py`. In this step, you will produce 2 output csvs beginning with `qa_` for each csv of questions generated in the question-generation step.
 
