@@ -53,7 +53,7 @@ We have included the HTML files for both human evaluation tasks.  `TurkTasks/cau
 ## How to Cite
 
 If you extend or use this work, please cite our paper:
-
+```
 @inproceedings{stasaski-etal-2021-automatically,
     title = "Automatically Generating Cause-and-Effect Questions from Passages",
     author = "Stasaski, Katherine  and
@@ -70,5 +70,5 @@ If you extend or use this work, please cite our paper:
     pages = "158--170",
     abstract = "Automated question generation has the potential to greatly aid in education applications, such as online study aids to check understanding of readings. The state-of-the-art in neural question generation has advanced greatly, due in part to the availability of large datasets of question-answer pairs. However, the questions generated are often surface-level and not challenging for a human to answer. To develop more challenging questions, we propose the novel task of cause-and-effect question generation. We build a pipeline that extracts causal relations from passages of input text, and feeds these as input to a state-of-the-art neural question generator. The extractor is based on prior work that classifies causal relations by linguistic category (Cao et al., 2016; Altenberg, 1984). This work results in a new, publicly available collection of cause-and-effect questions. We evaluate via both automatic and manual metrics and find performance improves for both question generation and question answering when we utilize a small auxiliary data source of cause-and-effect questions for fine-tuning. Our approach can be easily applied to generate cause-and-effect questions from other text collections and educational material, allowing for adaptable large-scale generation of cause-and-effect questions.",
 }
-
+```
 Let us know if you have any questions!
